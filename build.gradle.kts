@@ -1,4 +1,3 @@
-import org.gradle.internal.impldep.kotlinx.serialization.Serializable
 import org.slf4j.event.Level
 
 plugins {
@@ -8,10 +7,10 @@ plugins {
     id("idea")
 }
 
-version = findProperty("mod.version")!!.toString()
-group = findProperty("mod.group")!!.toString()
-base.archivesName = findProperty("mod.id")!!.toString()
-java.toolchain.languageVersion = JavaLanguageVersion.of(findProperty("java.version")!!.toString().toInt())
+version = properties["mod.version"].toString()
+group = properties["mod.group"].toString()
+base.archivesName = properties["mod.id"].toString()
+java.toolchain.languageVersion = JavaLanguageVersion.of(properties["java.version"].toString().toInt())
 
 tasks.wrapper.configure {
     distributionType = Wrapper.DistributionType.BIN
@@ -31,25 +30,25 @@ configurations{
 }
 
 neoForge {
-    version = findProperty("neoforge.version")!!.toString()
+    version = properties["neoforge.version"].toString()
 
-    mods.register(findProperty("mod.id")!!.toString()).get().sourceSet(sourceSets.main.get())
+    mods.register(properties["mod.id"].toString()).get().sourceSet(sourceSets.main.get())
 
     parchment {
-        mappingsVersion = findProperty("parchment.version")!!.toString()
-        minecraftVersion = findProperty("minecraft.version")!!.toString()
+        mappingsVersion = properties["parchment.version"].toString()
+        minecraftVersion = properties["minecraft.version"].toString()
     }
 
     runs {
         register("client") {
             client()
-            systemProperty("neoforge.enabledGameTestNamespaces", findProperty("mod.id")!!.toString())
+            systemProperty("neoforge.enabledGameTestNamespaces", properties["mod.id"].toString())
         }
 
         register("server") {
             server()
             programArgument("--nogui")
-            systemProperty("neoforge.enabledGameTestNamespaces", findProperty("mod.id")!!.toString())
+            systemProperty("neoforge.enabledGameTestNamespaces", properties["mod.id"]!!.toString())
         }
 
         register("clientData") {
@@ -57,7 +56,7 @@ neoForge {
 
             programArguments.addAll(
                 "--all",
-                "--mod", findProperty("mod.id")!!.toString(),
+                "--mod", properties["mod.id"]!!.toString(),
                 "--output", file("src/generated/resources/").absolutePath,
                 "--existing", file("src/main/resources/").absolutePath
             )
