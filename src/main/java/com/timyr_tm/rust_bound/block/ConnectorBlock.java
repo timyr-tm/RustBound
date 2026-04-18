@@ -1,6 +1,5 @@
 package com.timyr_tm.rust_bound.block;
 
-import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -17,11 +16,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-import org.slf4j.Logger;
 
 public class ConnectorBlock extends Block {
-    private static final Logger LOGGER = LogUtils.getLogger();
-
     public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING;
 
     public static final VoxelShape DOWN_SHAPE = Block.box(5, 0, 5, 11, 6, 11);
