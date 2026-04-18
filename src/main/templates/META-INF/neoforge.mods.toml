@@ -1,0 +1,27 @@
+license = "${this.'mod.license'}"
+issueTrackerURL = "${this.'mod.issue_tracker'}"
+
+[[mods]]
+modId = "${this.'mod.id'}"
+version = "${this.'mod.version'}"
+displayName = "${this.'mod.name'}"
+updateJSONURL = "${this.'mod.update_url'}"
+displayURL = "${this.'mod.display_url'}"
+logoFile = "${this.'mod.logo'}"
+credits = "${this.'mod.credits'}"
+authors = "${this.'mod.authors'}"
+description = "${this.'mod.description'}"
+
+[[dependencies.${this.'mod.id'}]]
+modId = "neoforge"
+type = "required"
+versionRange = "${this.'neoforge.version'}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${this.'mod.id'}]]
+modId = "minecraft"
+type = "required"
+versionRange = "${this.'minecraft.version_range'}"
+ordering = "NONE"
+side = "BOTH"
