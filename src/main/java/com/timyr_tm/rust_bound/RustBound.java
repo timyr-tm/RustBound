@@ -8,6 +8,7 @@ import net.neoforged.fml.common.Mod;
 import static com.timyr_tm.rust_bound.item.Items.ITEMS;
 import static com.timyr_tm.rust_bound.item.CreativeModeTabs.CREATIVE_MODE_TABS;
 import static com.timyr_tm.rust_bound.block.Blocks.BLOCKS;
+import static com.timyr_tm.rust_bound.block.entity.BlockEntityTypes.BLOCK_ENTITY_TYPES;
 
 @Mod(RustBound.MOD_ID)
 public class RustBound {
@@ -17,6 +18,7 @@ public class RustBound {
         ITEMS.register(bus);
         CREATIVE_MODE_TABS.register(bus);
         BLOCKS.register(bus);
+        BLOCK_ENTITY_TYPES.register(bus);
     }
 
     public static ModContainer getModContainer() {

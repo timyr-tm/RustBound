@@ -1,5 +1,7 @@
 package com.timyr_tm.rust_bound.block;
 
+import com.timyr_tm.rust_bound.block.entity.BlockEntityTypes;
+import com.timyr_tm.rust_bound.block.entity.ConnectorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -7,6 +9,8 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -17,7 +21,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-public class ConnectorBlock extends Block {
+public class ConnectorBlock extends Block implements EntityBlock {
     public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING;
 
     public static final VoxelShape DOWN_SHAPE = Block.box(5, 0, 5, 11, 6, 11);
@@ -72,5 +76,10 @@ public class ConnectorBlock extends Block {
             case WEST -> WEST_SHAPE;
             case EAST -> EAST_SHAPE;
         };
+    }
+
+    @Override
+    public @Nullable BlockEntity newBlockEntity(@NonNull BlockPos pos, @NonNull BlockState state) {
+        return new ConnectorBlockEntity(pos, state);
     }
 }
