@@ -1,7 +1,6 @@
-package com.timyr_tm.rust_bound.block;
+package com.timyr_tm.rust_bound.world.block;
 
-import com.timyr_tm.rust_bound.block.entity.BlockEntityTypes;
-import com.timyr_tm.rust_bound.block.entity.ConnectorBlockEntity;
+import com.timyr_tm.rust_bound.world.block.entity.ConnectorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;

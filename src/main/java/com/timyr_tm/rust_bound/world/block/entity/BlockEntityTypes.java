@@ -1,7 +1,7 @@
-package com.timyr_tm.rust_bound.block.entity;
+package com.timyr_tm.rust_bound.world.block.entity;
 
 import com.timyr_tm.rust_bound.RustBound;
-import com.timyr_tm.rust_bound.block.Blocks;
+import com.timyr_tm.rust_bound.world.block.Blocks;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.registries.DeferredHolder;

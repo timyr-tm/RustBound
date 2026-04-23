@@ -5,10 +5,10 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 
-import static com.timyr_tm.rust_bound.item.Items.ITEMS;
-import static com.timyr_tm.rust_bound.item.CreativeModeTabs.CREATIVE_MODE_TABS;
-import static com.timyr_tm.rust_bound.block.Blocks.BLOCKS;
-import static com.timyr_tm.rust_bound.block.entity.BlockEntityTypes.BLOCK_ENTITY_TYPES;
+import static com.timyr_tm.rust_bound.world.item.Items.ITEMS;
+import static com.timyr_tm.rust_bound.world.item.CreativeModeTabs.CREATIVE_MODE_TABS;
+import static com.timyr_tm.rust_bound.world.block.Blocks.BLOCKS;
+import static com.timyr_tm.rust_bound.world.block.entity.BlockEntityTypes.BLOCK_ENTITY_TYPES;
 
 @Mod(RustBound.MOD_ID)
 public class RustBound {
