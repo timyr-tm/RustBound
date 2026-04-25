@@ -9,6 +9,7 @@ import static com.timyr_tm.rust_bound.world.item.Items.ITEMS;
 import static com.timyr_tm.rust_bound.world.item.CreativeModeTabs.CREATIVE_MODE_TABS;
 import static com.timyr_tm.rust_bound.world.block.Blocks.BLOCKS;
 import static com.timyr_tm.rust_bound.world.block.entity.BlockEntityTypes.BLOCK_ENTITY_TYPES;
+import static com.timyr_tm.rust_bound.core.component.DataComponents.DATA_COMPONENTS;
 
 @Mod(RustBound.MOD_ID)
 public class RustBound {
@@ -19,6 +20,7 @@ public class RustBound {
         CREATIVE_MODE_TABS.register(bus);
         BLOCKS.register(bus);
         BLOCK_ENTITY_TYPES.register(bus);
+        DATA_COMPONENTS.register(bus);
     }
 
     public static ModContainer getModContainer() {

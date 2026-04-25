@@ -10,4 +10,5 @@ public final class Items {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(RustBound.MOD_ID);
 
     public static final DeferredItem<BlockItem> TEST_CONNECTOR = ITEMS.registerSimpleBlockItem(Blocks.TEST_CONNECTOR);
+    public static final DeferredItem<WireCoilItem> TEST_COIL = ITEMS.registerItem("test_coil", WireCoilItem::new);
 }

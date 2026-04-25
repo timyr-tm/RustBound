@@ -5,7 +5,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 public class ConnectorBlockEntity extends ConnectableBlockEntity {
 	public ConnectorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -17,12 +17,12 @@ public class ConnectorBlockEntity extends ConnectableBlockEntity {
 	}
 
 	@Override
-	public void createConnectionPoints(Consumer<ConnectionPointInfo> connections) {
+	public void createConnectionPoints(BiConsumer<String, ConnectionPointInfo> connections) {
 		if (this.level == null)
 			return;
 		connections.accept(
+			"main",
 			new ConnectionPointInfo(
-				"main",
 				new Vec3(.5, .5, .5),
 				this.getBlockState().getShape(this.level, this.getBlockPos()),
 				this.getBlockPos()

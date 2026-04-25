@@ -11,11 +11,12 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 public abstract class ConnectableBlockEntity extends BlockEntity {
+
 	private final Map<String, Set<ConnectionInfo>> connections = new HashMap<>();
-	private final Set<ConnectionPointInfo> connectionPoints = new HashSet<>();
+	private final Map<String, ConnectionPointInfo> connectionPoints = new HashMap<>();
 
 	public ConnectableBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -31,23 +32,23 @@ public abstract class ConnectableBlockEntity extends BlockEntity {
 		assert level != null;
 
 		connectionPoints.clear();
-		createConnectionPoints(connectionPoints::add);
+		createConnectionPoints(connectionPoints::put);
 
 		for (String name: connections.keySet()) {
-			if (connectionPoints.stream().allMatch(item -> item.name().equals(name)))
+			if (connectionPoints.containsKey(name))
 				continue;
 			clearConnection(name);
 		}
 	}
 
-	public void createConnectionPoints(Consumer<ConnectionPointInfo> connections) { }
+	public void createConnectionPoints(BiConsumer<String, ConnectionPointInfo> connections) { }
 
-	public Set<ConnectionPointInfo> getConnectionPoints() {
+	public Map<String, ConnectionPointInfo> getConnectionPoints() {
 		return connectionPoints;
 	}
 
 	public boolean addConnection(String name, ConnectionInfo connection) {
-		if (connectionPoints.stream().noneMatch(point -> point.name().equals(name)))
+		if (!connectionPoints.containsKey(name))
 			return false;
 		if (!connections.containsKey(name))
 			connections.put(name, new HashSet<>());
@@ -84,6 +85,21 @@ public abstract class ConnectableBlockEntity extends BlockEntity {
 
 	public @Nullable Set<ConnectionInfo> getConnections(String name) {
 		return connections.get(name);
+	}
+
+	@Override
+	public void setRemoved() {
+		if (level != null)
+			for (Map.Entry<String, Set<ConnectionInfo>> connectionEntry: this.connections.entrySet()) {
+				for (ConnectionInfo connection: connectionEntry.getValue()) {
+					ConnectableBlockEntity blockEntity = connection.getBlockEntity(this.level);
+					if (blockEntity == null)
+						continue;
+					blockEntity.removeConnection(connection.name(), new ConnectionInfo(connectionEntry.getKey(), getBlockPos()));
+					blockEntity.setChanged();
+				}
+			}
+		super.setRemoved();
 	}
 
 	@Override

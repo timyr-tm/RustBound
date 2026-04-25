@@ -8,7 +8,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-public record ConnectionPointInfo(String name, Vec3 point, VoxelShape shape, BlockPos pos) {
+public record ConnectionPointInfo(Vec3 point, VoxelShape shape, BlockPos pos) {
     public @Nullable ConnectableBlockEntity getBlockEntity(LevelReader level) {
         return level.getBlockEntity(pos) instanceof ConnectableBlockEntity blockEntity
             ? blockEntity
