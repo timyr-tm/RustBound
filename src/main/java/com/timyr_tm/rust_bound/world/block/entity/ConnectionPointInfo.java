@@ -1,0 +1,21 @@
+package com.timyr_tm.rust_bound.world.block.entity;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
+public record ConnectionPointInfo(String name, Vec3 point, VoxelShape shape, BlockPos pos) {
+    public @Nullable ConnectableBlockEntity getBlockEntity(LevelReader level) {
+        return level.getBlockEntity(pos) instanceof ConnectableBlockEntity blockEntity
+            ? blockEntity
+            : null;
+    }
+
+    public @NonNull BlockState getBlockState(LevelReader level) {
+        return level.getBlockState(pos);
+    }
+}
