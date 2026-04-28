@@ -1,4 +1,4 @@
-package com.timyr_tm.rust_bound.client;
+package com.timyr_tm.rust_bound.client.debug;
 
 import net.minecraft.client.gui.components.debug.DebugEntryCategory;
 import net.minecraft.client.gui.components.debug.DebugScreenDisplayer;

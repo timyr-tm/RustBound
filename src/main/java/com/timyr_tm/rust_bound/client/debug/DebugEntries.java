@@ -1,4 +1,4 @@
-package com.timyr_tm.rust_bound.client;
+package com.timyr_tm.rust_bound.client.debug;
 
 import com.timyr_tm.rust_bound.RustBound;
 import net.minecraft.client.Minecraft;

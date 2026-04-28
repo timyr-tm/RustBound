@@ -2,9 +2,11 @@ package com.timyr_tm.rust_bound.world.item;
 
 import com.timyr_tm.rust_bound.core.component.DataComponents;
 import com.timyr_tm.rust_bound.world.block.entity.ConnectableBlockEntity;
-import com.timyr_tm.rust_bound.world.block.entity.ConnectionInfo;
-import com.timyr_tm.rust_bound.world.block.entity.ConnectionPointInfo;
+import com.timyr_tm.rust_bound.world.electricity.ConnectionInfo;
+import com.timyr_tm.rust_bound.world.electricity.ConnectionPointInfo;
+import com.timyr_tm.rust_bound.world.electricity.WireType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -19,8 +21,11 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public class WireCoilItem extends Item {
-    public WireCoilItem(Properties properties) {
+    private final ResourceKey<WireType> wireType;
+
+    public WireCoilItem(ResourceKey<WireType> wireType, Properties properties) {
         super(properties);
+        this.wireType = wireType;
     }
 
     @Override
@@ -42,8 +47,13 @@ public class WireCoilItem extends Item {
 
             if (stack.has(DataComponents.WIRE_COIL_CONNECTION)) {
                 final ConnectionInfo firstConnection = stack.remove(DataComponents.WIRE_COIL_CONNECTION);
-                final ConnectionInfo lastConnection = new ConnectionInfo(point.orElseThrow().getKey(), point.orElseThrow().getValue().pos());
+                final ConnectionInfo lastConnection = new ConnectionInfo(
+                    point.orElseThrow().getKey(),
+                    point.orElseThrow().getValue().pos(),
+                    this.wireType
+                );
 
+                assert firstConnection != null;
                 final ConnectableBlockEntity lastBlockEntity = firstConnection.getBlockEntity(context.getLevel());
 
                 if (lastBlockEntity == null)
@@ -66,7 +76,7 @@ public class WireCoilItem extends Item {
                     );
             }
             else {
-                stack.set(DataComponents.WIRE_COIL_CONNECTION, new ConnectionInfo(point.orElseThrow().getKey(), point.orElseThrow().getValue().pos()));
+                stack.set(DataComponents.WIRE_COIL_CONNECTION, new ConnectionInfo(point.orElseThrow().getKey(), point.orElseThrow().getValue().pos(), this.wireType));
                 if (context.getLevel().isClientSide() && context.getPlayer() != null)
                     context.getPlayer().displayClientMessage(Component.literal("+ %s".formatted(point.orElseThrow().getKey())), true);
             }
@@ -83,4 +93,8 @@ public class WireCoilItem extends Item {
     ) {
 
     }
+
+	public ResourceKey<WireType> getWireType() {
+		return wireType;
+	}
 }

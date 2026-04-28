@@ -14,7 +14,7 @@ import static net.minecraft.world.item.Items.LIGHT;
 public final class CreativeModeTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, RustBound.MOD_ID);
 
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> RUST_BOUND = CREATIVE_MODE_TABS.register(
+	public static final DeferredHolder<CreativeModeTab, CreativeModeTab> RUST_BOUND = CREATIVE_MODE_TABS.register(
         "main",
         () -> CreativeModeTab.builder()
             .title(Component.literal(getModNamespace()))
@@ -29,5 +29,6 @@ public final class CreativeModeTabs {
 
     private static void getMainTabItems(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
         output.accept(Items.TEST_CONNECTOR);
+        output.accept(Items.TEST_COIL);
     }
 }

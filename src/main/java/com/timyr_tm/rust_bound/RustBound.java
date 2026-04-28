@@ -2,7 +2,6 @@ package com.timyr_tm.rust_bound;
 
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 
 import static com.timyr_tm.rust_bound.world.item.Items.ITEMS;
@@ -10,6 +9,7 @@ import static com.timyr_tm.rust_bound.world.item.CreativeModeTabs.CREATIVE_MODE_
 import static com.timyr_tm.rust_bound.world.block.Blocks.BLOCKS;
 import static com.timyr_tm.rust_bound.world.block.entity.BlockEntityTypes.BLOCK_ENTITY_TYPES;
 import static com.timyr_tm.rust_bound.core.component.DataComponents.DATA_COMPONENTS;
+import static com.timyr_tm.rust_bound.world.electricity.WireTypes.WIRE_TYPES;
 
 @Mod(RustBound.MOD_ID)
 public class RustBound {
@@ -21,9 +21,6 @@ public class RustBound {
         BLOCKS.register(bus);
         BLOCK_ENTITY_TYPES.register(bus);
         DATA_COMPONENTS.register(bus);
-    }
-
-    public static ModContainer getModContainer() {
-        return ModList.get().getModContainerById(MOD_ID).orElseThrow();
+        WIRE_TYPES.register(bus);
     }
 }

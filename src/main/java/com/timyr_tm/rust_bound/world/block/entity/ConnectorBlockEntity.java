@@ -1,5 +1,6 @@
 package com.timyr_tm.rust_bound.world.block.entity;
 
+import com.timyr_tm.rust_bound.world.electricity.ConnectionPointInfo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,7 +26,8 @@ public class ConnectorBlockEntity extends ConnectableBlockEntity {
 			new ConnectionPointInfo(
 				new Vec3(.5, .5, .5),
 				this.getBlockState().getShape(this.level, this.getBlockPos()),
-				this.getBlockPos()
+				this.getBlockPos(),
+				true
 			)
 		);
 	}

@@ -1,5 +1,7 @@
 package com.timyr_tm.rust_bound.world.block.entity;
 
+import com.timyr_tm.rust_bound.world.electricity.ConnectionInfo;
+import com.timyr_tm.rust_bound.world.electricity.ConnectionPointInfo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -47,6 +49,7 @@ public abstract class ConnectableBlockEntity extends BlockEntity {
 		return connectionPoints;
 	}
 
+	@SuppressWarnings("UnusedReturnValue")
 	public boolean addConnection(String name, ConnectionInfo connection) {
 		if (!connectionPoints.containsKey(name))
 			return false;
@@ -76,7 +79,8 @@ public abstract class ConnectableBlockEntity extends BlockEntity {
 				connection.name(),
 				new ConnectionInfo(
 					name,
-					getBlockPos()
+					getBlockPos(),
+					connection.wireType()
 				)
 			);
 		}
@@ -95,7 +99,7 @@ public abstract class ConnectableBlockEntity extends BlockEntity {
 					ConnectableBlockEntity blockEntity = connection.getBlockEntity(this.level);
 					if (blockEntity == null)
 						continue;
-					blockEntity.removeConnection(connection.name(), new ConnectionInfo(connectionEntry.getKey(), getBlockPos()));
+					blockEntity.removeConnection(connection.name(), new ConnectionInfo(connectionEntry.getKey(), getBlockPos(), connection.wireType()));
 					blockEntity.setChanged();
 				}
 			}

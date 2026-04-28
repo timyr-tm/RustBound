@@ -1,7 +1,7 @@
 package com.timyr_tm.rust_bound.core.component;
 
 import com.timyr_tm.rust_bound.RustBound;
-import com.timyr_tm.rust_bound.world.block.entity.ConnectionInfo;
+import com.timyr_tm.rust_bound.world.electricity.ConnectionInfo;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.neoforge.registries.DeferredRegister;
