@@ -1,3 +1,5 @@
+modLoader = "kotlinforforge"
+loaderVersion = "${this.'kotlin_for_forge.version_range'}"
 license = "${this.'mod.license'}"
 issueTrackerURL = "${this.'mod.issue_tracker'}"
 
@@ -23,5 +25,12 @@ side = "BOTH"
 modId = "minecraft"
 type = "required"
 versionRange = "${this.'minecraft.version_range'}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${this.'mod.id'}]]
+modId = "kotlinforforge"
+type = "required"
+versionRange = "${this.'kotlin_for_forge.version_range'}"
 ordering = "NONE"
 side = "BOTH"

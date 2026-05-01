@@ -31,6 +31,14 @@ configurations{
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
+    implementation("thedarkcolour:kotlinforforge-neoforge:${properties["kotlin_for_forge.version"].toString()}")
+}
+
+repositories {
+    maven {
+        name = "Kotlin for Forge"
+        setUrl("https://thedarkcolour.github.io/KotlinForForge/")
+    }
 }
 
 neoForge {
@@ -82,6 +90,7 @@ var generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
         "mod.authors", "mod.description", "neoforge.version",
         "parchment.version", "minecraft.version",
         "minecraft.version_range", "java.version",
+        "kotlin_for_forge.version", "kotlin_for_forge.version_range"
     ).associateWith { properties.getOrDefault(it, "") }
 
     inputs.properties(replaceProperties)

@@ -24,14 +24,12 @@ object DebugEntries {
 		return identifier;
 	}
 
-	@JvmStatic
 	@SubscribeEvent
 	fun onRegisterDebugEntries(event: RegisterDebugEntriesEvent) {
 		for (entry in ENTRY_MAP)
 			event.register(entry.key, entry.value)
 	}
 
-	@JvmStatic
 	@SubscribeEvent
 	fun onRegisterDebugRenderers(event: RegisterDebugRenderersEvent) {
 		if (Minecraft.getInstance().debugEntries.isCurrentlyEnabled(CONNECTION_ENDPOINTS))
