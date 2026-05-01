@@ -1,10 +1,10 @@
 import org.slf4j.event.Level
 
 plugins {
-    id("java")
     id("maven-publish")
     id("net.neoforged.moddev") version "2.0.141"
     id("idea")
+    kotlin("jvm") version "2.3.21"
 }
 
 version = properties["mod.version"].toString()
@@ -27,6 +27,10 @@ configurations{
     runtimeClasspath {
         extendsFrom(localRuntime)
     }
+}
+
+dependencies {
+    implementation("org.jetbrains.kotlin:kotlin-stdlib")
 }
 
 neoForge {
