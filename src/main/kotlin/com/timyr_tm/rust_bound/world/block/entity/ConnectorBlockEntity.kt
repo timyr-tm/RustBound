@@ -8,13 +8,10 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.function.BiConsumer;
 
-class ConnectorBlockEntity: ConnectableBlockEntity {
-	constructor(type: BlockEntityType<*>, pos: BlockPos, state: BlockState): super(type, pos, state)
+class ConnectorBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: BlockState): ConnectableBlockEntity(type, pos, state) {
+	constructor(pos: BlockPos, state: BlockState): this(BlockEntityTypes.CONNECTOR_BLOCK_ENTITY_TYPE.get(), pos, state)
 
-	constructor(pos: BlockPos, state: BlockState): super(BlockEntityTypes.CONNECTOR_BLOCK_ENTITY_TYPE.get(), pos, state)
-
-	override fun createConnectionPoints(connections: BiConsumer<String, ConnectionPointInfo>) {
-		if (level == null) return
-		connections.accept("main", ConnectionPointInfo(Vec3(0.5, 0.5, 0.5), blockState.getShape(level!!, blockPos), blockPos, true))
+	override fun createConnections(connections: BiConsumer<String, ConnectionPointInfo>) {
+		connections.accept("main", ConnectionPointInfo(Vec3(0.5, 0.5, 0.5), blockState.getShape(level!!, blockPos), blockPos))
 	}
 }

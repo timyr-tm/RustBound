@@ -1,7 +1,7 @@
 package com.timyr_tm.rust_bound.client.debug;
 
 import com.timyr_tm.rust_bound.world.block.entity.ConnectableBlockEntity
-import com.timyr_tm.rust_bound.world.electricity.ConnectionInfo
+import com.timyr_tm.rust_bound.world.electricity.ConnectionPointerInfo
 import com.timyr_tm.rust_bound.world.electricity.ConnectionPointInfo
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.culling.Frustum
@@ -33,28 +33,30 @@ class DebugEntryConnectionsRender(private val minecraft: Minecraft): DebugRender
 		for (pos in blocks) {
 			val blockEntity: BlockEntity? = minecraft.level!!.getBlockEntity(pos)
 			if (blockEntity is ConnectableBlockEntity) {
-				for(point in blockEntity.getConnectionPoints()) {
-					point.value.shape.forAllBoxes (
+				for((key, value) in blockEntity.connections) {
+					value.shape.forAllBoxes (
 						fun(minX, minY, minZ, maxX, maxY, maxZ) {
 							Gizmos.cuboid(
 								AABB(
-									Vec3(point.value.pos).add(minX, minY, minZ),
-									Vec3(point.value.pos).add(maxX, maxY, maxZ)
+									Vec3(value.pos).add(minX, minY, minZ),
+									Vec3(value.pos).add(maxX, maxY, maxZ)
 								),
 								GizmoStyle.fill(color)
 							)
 						}
 					)
 
-					val pointPos: Vec3 = Vec3(point.value.pos).add(point.value.point)
+					val pointPos: Vec3 = Vec3(value.pos).add(value.point)
 					Gizmos.point(pointPos, color, 8f)
 
-					val connections: Set<ConnectionInfo> = blockEntity.getConnections(point.key) ?: setOf()
+					val connections: Set<ConnectionPointerInfo> = blockEntity.connections[key]!!.toSet()
+
 					Gizmos.billboardText(
-						"${point.key} (${connections.size})",
+						"$key (${connections.size})",
 						pointPos.add(.0, .25, .0),
 						TextGizmo.Style.forColor(ARGB.colorFromFloat(1f, 1f, 1f, 1f))
 					)
+
 					for(connection in connections) {
                         val lastPoint: ConnectionPointInfo = connection.getConnectionPoint(minecraft.level!!) ?: continue
                         Gizmos.line(

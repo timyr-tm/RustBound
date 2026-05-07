@@ -1,89 +1,60 @@
 package com.timyr_tm.rust_bound.world.block.entity
 
-import com.timyr_tm.rust_bound.world.electricity.ConnectionInfo
+import com.mojang.logging.LogUtils
 import com.timyr_tm.rust_bound.world.electricity.ConnectionPointInfo
+import com.timyr_tm.rust_bound.world.electricity.ConnectionPointerInfo
 import net.minecraft.core.BlockPos
-import net.minecraft.network.protocol.Packet
-import net.minecraft.network.protocol.game.ClientGamePacketListener
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
+import org.slf4j.Logger
 import java.util.function.BiConsumer
 
-abstract class ConnectableBlockEntity: BlockEntity {
-    private val connections: MutableMap<String, MutableSet<ConnectionInfo>> = mutableMapOf()
-    private val connectionPoints: MutableMap<String, ConnectionPointInfo> = mutableMapOf()
+abstract class ConnectableBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: BlockState): BlockEntity(type, pos, state) {
+    private val logger: Logger = LogUtils.getLogger()
 
-    constructor(type: BlockEntityType<*>, pos: BlockPos, state: BlockState) : super(type, pos, state)
+    var connections: Map<String, ConnectionPointInfo> = mapOf()
+        private set
+
+    open fun createConnections(connections: BiConsumer<String, ConnectionPointInfo>) {}
+
+    fun disconnectAll() {
+        for ((name, point) in this.connections)
+            for (connection in point) {
+                val blockEntity: ConnectableBlockEntity = connection.getBlockEntity(this.level!!) ?: continue
+                blockEntity.connections[connection.name] ?: continue -= ConnectionPointerInfo(name, point.pos, connection.wireType)
+            }
+    }
+
+    fun updateConnections() {
+        val connections: MutableMap<String, ConnectionPointInfo> = mutableMapOf()
+        createConnections(connections::put)
+
+        for ((key, value) in connections.entries) {
+            if (key in connections)
+                connections[key]!! += value
+            else for (connection in value) {
+                val point: ConnectionPointInfo = connection.getBlockEntity(this.level!!)?.connections[connection.name] ?: continue
+                point -= ConnectionPointerInfo(key, value.pos, connection.wireType)
+            }
+        }
+
+        this.connections = connections.toMap()
+    }
 
     override fun onLoad() {
         super.onLoad()
-        createConnectionPoints(connectionPoints::put)
-        for (name in connections.keys) {
-            if (connectionPoints.containsKey(name))
-                continue
-            clearConnection(name)
-        }
+        updateConnections()
     }
-
-    private fun updateConnectionPoints() {
-        assert(level != null)
-        connectionPoints.clear()
-        for (name in connectionPoints.keys) {
-            if (connectionPoints.containsKey(name)) continue
-            clearConnection(name)
-        }
-    }
-
-    open fun createConnectionPoints(connections: BiConsumer<String, ConnectionPointInfo>) {}
-
-    fun getConnectionPoints(): MutableMap<String, ConnectionPointInfo> = connectionPoints
-
-    fun addConnection(name: String, connection: ConnectionInfo): Boolean {
-        if (!connectionPoints.containsKey(name))
-            return false
-        if (!connections.containsKey(name))
-            connections[name] = mutableSetOf()
-        return connections[name]!!.add(connection)
-    }
-
-    fun removeConnection(name: String, connection: ConnectionInfo): Boolean {
-        if (!connections.containsKey(name))
-            return false;
-        if (connections[name]!!.count() == 1)
-            return connections.remove(name) != null;
-        return connections[name]!!.remove(connection);
-    }
-
-    fun clearConnection(name: String) {
-        if (level == null || !connections.containsKey(name))
-            return
-
-        for(connection in connections[name]!!) {
-            val blockEntity: ConnectableBlockEntity = connection.getBlockEntity(level!!) ?: continue;
-            blockEntity.removeConnection(connection.name, ConnectionInfo(name, blockPos, connection.wireType));
-        }
-    }
-
-    fun getConnections(name: String): Set<ConnectionInfo>? = connections[name]
-
-    override fun setRemoved() {
-        if (level != null)
-            for (connectionEntry in connections )
-                for (connection in connectionEntry.value) {
-                    val blockEntity: ConnectableBlockEntity = connection.getBlockEntity(level!!) ?: continue
-                    blockEntity.removeConnection(connection.name, ConnectionInfo(connectionEntry.key, blockPos, connection.wireType))
-                    blockEntity.setChanged()
-                }
-        super.setRemoved()
-    }
-
-    override fun getUpdatePacket(): Packet<ClientGamePacketListener>? = ClientboundBlockEntityDataPacket.create(this)
 
     @Suppress("OVERRIDE_DEPRECATION")
     override fun setBlockState(blockState: BlockState) {
         super.setBlockState(blockState)
-        this.updateConnectionPoints()
+        updateConnections()
+    }
+
+    override fun setRemoved() {
+        super.setRemoved()
+        disconnectAll()
     }
 }
