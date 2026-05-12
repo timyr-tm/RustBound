@@ -1,0 +1,8 @@
+{
+    "parent": "rust_bound:block/insulator",
+    "textures": {
+        "base": "minecraft:block/terracotta",
+        "connection": "minecraft:block/cut_copper",
+        "footing": "minecraft:block/stone"
+    }
+}

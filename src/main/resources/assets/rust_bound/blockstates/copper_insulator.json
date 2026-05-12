@@ -1,0 +1,30 @@
+{
+    "variants": {
+        "facing=down": {
+            "model": "rust_bound:block/copper_insulator"
+        },
+        "facing=up": {
+            "model": "rust_bound:block/copper_insulator",
+            "x": 180
+        },
+        "facing=north": {
+            "model": "rust_bound:block/copper_insulator",
+            "x": 90,
+            "y": 180
+        },
+        "facing=south": {
+            "model": "rust_bound:block/copper_insulator",
+            "x": 90
+        },
+        "facing=west": {
+            "model": "rust_bound:block/copper_insulator",
+            "x": 90,
+            "y": 90
+        },
+        "facing=east": {
+            "model": "rust_bound:block/copper_insulator",
+            "x": 90,
+            "y": 270
+        }
+    }
+}

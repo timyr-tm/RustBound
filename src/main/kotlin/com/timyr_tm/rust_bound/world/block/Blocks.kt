@@ -8,4 +8,6 @@ object Blocks {
     val BLOCKS: DeferredRegister.Blocks = DeferredRegister.createBlocks(RustBound.MOD_ID)
 
     val TEST_CONNECTOR: DeferredBlock<ConnectorBlock> = BLOCKS.registerBlock("test_connector", ::ConnectorBlock)
+
+    val COPPER_INSULATOR: DeferredBlock<InsulatorBlock> = BLOCKS.registerBlock("copper_insulator", ::InsulatorBlock)
 }

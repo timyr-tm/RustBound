@@ -9,7 +9,6 @@ import net.minecraft.world.item.Items.LIGHT
 import net.neoforged.fml.ModList
 import net.neoforged.neoforge.registries.DeferredHolder
 import net.neoforged.neoforge.registries.DeferredRegister
-import java.util.function.Supplier
 
 object CreativeModeTabs {
     val CREATIVE_MODE_TABS: DeferredRegister<CreativeModeTab> = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, RustBound.MOD_ID);
@@ -26,7 +25,8 @@ object CreativeModeTabs {
     private fun getModNamespace(): String = ModList.get().getModContainerById(RustBound.MOD_ID).orElseThrow().getNamespace()
 
     private fun getMainTabItems(parameters: CreativeModeTab.ItemDisplayParameters, output: CreativeModeTab.Output) {
-        output.accept(Items.TEST_CONNECTOR);
-        output.accept(Items.TEST_COIL);
+        output.accept(Items.TEST_CONNECTOR)
+        output.accept(Items.TEST_COIL)
+        output.accept(Items.COPPER_INSULATOR)
     }
 }
