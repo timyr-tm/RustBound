@@ -25,7 +25,6 @@ object CreativeModeTabs {
     private fun getModNamespace(): String = ModList.get().getModContainerById(RustBound.MOD_ID).orElseThrow().getNamespace()
 
     private fun getMainTabItems(parameters: CreativeModeTab.ItemDisplayParameters, output: CreativeModeTab.Output) {
-        output.accept(Items.TEST_CONNECTOR)
         output.accept(Items.TEST_COIL)
         output.accept(Items.COPPER_INSULATOR)
     }

@@ -1,7 +1,0 @@
-{
-    "parent": "rust_bound:block/connector",
-    "textures": {
-        "texture": "minecraft:block/stone",
-        "particle": "minecraft:block/stone"
-    }
-}

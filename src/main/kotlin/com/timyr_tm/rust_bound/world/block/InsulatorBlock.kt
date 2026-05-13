@@ -3,14 +3,12 @@ package com.timyr_tm.rust_bound.world.block
 import com.timyr_tm.rust_bound.world.block.entity.InsulatorBlockEntity
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
-import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.LevelReader
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.EntityBlock
 import net.minecraft.world.level.block.Mirror
-import net.minecraft.world.level.block.RenderShape
 import net.minecraft.world.level.block.Rotation
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
@@ -20,7 +18,6 @@ import net.minecraft.world.level.block.state.properties.EnumProperty
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
-import java.awt.Shape
 
 class InsulatorBlock(properties: Properties): Block(properties), EntityBlock {
 	companion object {
@@ -67,7 +64,7 @@ class InsulatorBlock(properties: Properties): Block(properties), EntityBlock {
 		.setValue(FACING, context.clickedFace.opposite)
 
 	override fun canSurvive(state: BlockState, level: LevelReader, pos: BlockPos): Boolean {
-		val facing: Direction = state.getValue(ConnectorBlock.FACING)
+		val facing: Direction = state.getValue(FACING)
 		val neighborPos: BlockPos = pos.relative(facing)
 		return level.getBlockState(neighborPos).isFaceSturdy(level, neighborPos, facing)
 	}

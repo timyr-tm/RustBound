@@ -1,6 +1,0 @@
-{
-    "model": {
-        "type": "minecraft:model",
-        "model": "rust_bound:block/test_connector"
-    }
-}

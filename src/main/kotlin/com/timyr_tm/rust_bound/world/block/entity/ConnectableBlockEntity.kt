@@ -4,9 +4,12 @@ import com.mojang.logging.LogUtils
 import com.timyr_tm.rust_bound.world.electricity.ConnectionPointInfo
 import com.timyr_tm.rust_bound.world.electricity.ConnectionPointerInfo
 import net.minecraft.core.BlockPos
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 import org.slf4j.Logger
 import java.util.function.BiConsumer
 
@@ -56,5 +59,13 @@ abstract class ConnectableBlockEntity(type: BlockEntityType<*>, pos: BlockPos, s
     override fun setRemoved() {
         super.setRemoved()
         disconnectAll()
+    }
+
+    override fun loadAdditional(input: ValueInput) {
+        super.loadAdditional(input)
+    }
+
+    override fun saveAdditional(output: ValueOutput) {
+        super.saveAdditional(output)
     }
 }
