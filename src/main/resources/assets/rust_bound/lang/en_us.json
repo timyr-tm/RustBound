@@ -1,5 +1,4 @@
 {
-    "block.rust_bound.test_connector": "Test Connector",
     "item.rust_bound.test_spool": "Test Spool",
     "spool.pointer": "Pointer: \"%s\" (%s)"
 }

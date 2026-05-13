@@ -8,21 +8,9 @@ import net.neoforged.neoforge.registries.DeferredHolder
 import net.neoforged.neoforge.registries.DeferredRegister
 
 object BlockEntityTypes {
-    val BLOCK_ENTITY_TYPES: DeferredRegister<BlockEntityType<*>> = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, RustBound.MOD_ID);
+    val BLOCK_ENTITY_TYPES: DeferredRegister<BlockEntityType<*>> = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, RustBound.MOD_ID)
 
-    val CONNECTOR_BLOCK_ENTITY_TYPE: DeferredHolder<BlockEntityType<*>, BlockEntityType<ConnectorBlockEntity>> = BLOCK_ENTITY_TYPES.register(
-        "connector",
-        fun() = BlockEntityType(
-            ::ConnectorBlockEntity,
-            Blocks.TEST_CONNECTOR.get()
-        )
-    );
-
-    val INSULATOR_BLOCK_ENTITY_TYPE: DeferredHolder<BlockEntityType<*>, BlockEntityType<InsulatorBlockEntity>> = BLOCK_ENTITY_TYPES.register(
-        "insulator",
-        fun() = BlockEntityType(
-            ::InsulatorBlockEntity,
-            Blocks.COPPER_INSULATOR.get()
-        )
-    )
+    val INSULATOR_BLOCK_ENTITY_TYPE: DeferredHolder<BlockEntityType<*>, BlockEntityType<InsulatorBlockEntity>> = BLOCK_ENTITY_TYPES.register("insulator") {
+        -> BlockEntityType(::InsulatorBlockEntity, Blocks.COPPER_INSULATOR.get())
+    }
 }
