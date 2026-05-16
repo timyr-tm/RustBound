@@ -1,22 +1,37 @@
 package com.timyr_tm.rust_bound.world.block.entity.render
 
 import com.mojang.blaze3d.vertex.PoseStack
-import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.logging.LogUtils
+import com.mojang.math.Axis
+import com.timyr_tm.rust_bound.RustBound
+import com.timyr_tm.rust_bound.client.model.geom.ModelLayers
+import com.timyr_tm.rust_bound.client.model.`object`.WireSegmentModel
+import com.timyr_tm.rust_bound.client.renderer.Sheets
 import com.timyr_tm.rust_bound.world.block.entity.ConnectableBlockEntity
+import net.minecraft.client.model.geom.EntityModelSet
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer
 import net.minecraft.client.renderer.rendertype.RenderTypes
 import net.minecraft.client.renderer.state.CameraRenderState
+import net.minecraft.client.renderer.texture.OverlayTexture
+import net.minecraft.client.renderer.texture.TextureAtlasSprite
+import net.minecraft.client.resources.model.Material
+import net.minecraft.client.resources.model.MaterialSet
+import net.minecraft.resources.Identifier
 import net.minecraft.world.phys.Vec3
+import org.joml.Matrix4f
+import org.joml.Quaternionf
 import org.joml.Vector3f
 import org.slf4j.Logger
 import kotlin.math.roundToInt
 import kotlin.math.sin
 
-class ConnectableBlockEntityRenderer: BlockEntityRenderer<ConnectableBlockEntity, ConnectableBlockEntityRenderState> {
-	private val logger: Logger = LogUtils.getLogger()
+class ConnectableBlockEntityRenderer(modelSet: EntityModelSet, val materials: MaterialSet): BlockEntityRenderer<ConnectableBlockEntity, ConnectableBlockEntityRenderState> {
+	val logger: Logger = LogUtils.getLogger()
+
+	private val texture: Material = Sheets.WIRE_SEGMENT_MAPPER.apply(Identifier.fromNamespaceAndPath(RustBound.MOD_ID, "wire_segment"))
+	private val model: WireSegmentModel = WireSegmentModel(modelSet.bakeLayer(ModelLayers.WIRE_SEGMENT), RenderTypes::entitySolid)
 
 	override fun createRenderState() = ConnectableBlockEntityRenderState()
 
@@ -54,31 +69,42 @@ class ConnectableBlockEntityRenderer: BlockEntityRenderer<ConnectableBlockEntity
 		state: ConnectableBlockEntityRenderState, poseStack: PoseStack,
 		collector: SubmitNodeCollector, cameraState: CameraRenderState
 	) {
-		for (point in state.points) collector.submitCustomGeometry(
-			poseStack,
-			RenderTypes.lines(),
-			fun(pose: PoseStack.Pose, consumer: VertexConsumer) = renderWire(point.start, point.end, pose, consumer)
-		)
-	}
+		val atlas: TextureAtlasSprite = materials.get(texture)
+		for (point in state.points) {
+			val length: Float = point.start.distance(point.end)
 
-	fun renderWire(start: Vector3f, end: Vector3f, pose: PoseStack.Pose, consumer: VertexConsumer) {
-		val length: Float = start.distance(end)
+			for (i in 0..<length.roundToInt()) {
+				val firstPos: Vector3f = mathPos(point.start, point.end, i.toFloat() / length.roundToInt(), length)
+				val lastPos: Vector3f = mathPos(point.start, point.end, (i + 1).toFloat() / length.roundToInt(), length)
+				val scale: Float = firstPos.distance(lastPos)
+				poseStack.pushPose()
+				poseStack.translate(Vec3(firstPos))
+				poseStack.mulPose(
+					Quaternionf()
+						.rotateTo(Vector3f(1f, 0f, 0f), lastPos.sub(firstPos).normalize())
+				)
+				poseStack.scale(scale, scale, scale)
+				collector.submitModel(
+					model,
+					Unit,
+					poseStack,
+					Sheets.WIRE_SEGMENT_SHEET_TYPE,
+					state.lightCoords,
+					OverlayTexture.NO_OVERLAY,
+					-1,
+					atlas,
+					0,
+					state.breakProgress
+				)
+				poseStack.popPose()
+			}
 
-		for (i in 0..<length.roundToInt()) {
-			consumer.addVertex(pose, mathPos(start, end, i.toFloat() / length.roundToInt(), length))
-				.setColor(0, 0, 0, 255)
-				.setLineWidth(8f)
-				.setNormal(0f, 1f, 0f)
-			consumer.addVertex(pose, mathPos(start, end, (i + 1).toFloat() / length.roundToInt(), length))
-				.setColor(0, 0, 0, 255)
-				.setLineWidth(8f)
-				.setNormal(0f, 1f, 0f)
 		}
 	}
 
 	fun mathPos(start: Vector3f, end: Vector3f, segment: Float, length: Float): Vector3f = Vector3f(
 		start.x + segment * (end.x - start.x),
-		(start.y + segment * (end.y - start.y)) - (sin((Math.PI / 2).toFloat() * segment) * (.25f * length)),
+		start.y + segment * (end.y - start.y) - (sin((Math.PI / 2).toFloat() * segment) * (.25f * length)),
 		start.z + segment * (end.z - start.z)
 	)
 }

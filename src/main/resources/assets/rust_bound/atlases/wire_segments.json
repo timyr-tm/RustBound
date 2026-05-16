@@ -1,0 +1,9 @@
+{
+    "sources": [
+        {
+            "type": "minecraft:directory",
+            "prefix": "entity/wire_segment/",
+            "source": "entity/wire_segment"
+        }
+    ]
+}
