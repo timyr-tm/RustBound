@@ -9,11 +9,10 @@ import net.minecraft.client.model.geom.builders.MeshDefinition
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.core.Direction
 import net.minecraft.resources.Identifier
+import org.joml.Math
 import java.util.function.Function
 
 class WireSegmentModel(root: ModelPart, renderType: Function<Identifier, RenderType>) : Model<Unit>(root, renderType) {
-	val segment: ModelPart = root.getChild("segment")
-
 	companion object {
 		fun createBodyLayer(): LayerDefinition {
 			val mesh = MeshDefinition()
@@ -22,10 +21,11 @@ class WireSegmentModel(root: ModelPart, renderType: Function<Identifier, RenderT
 				CubeListBuilder.create()
 					.texOffs(0, 0)
 					.addBox(
-						0f, -.5f, -.5f, 16f, 1f, 1f,
+						0f, -.5f, -.5f,
+						16f, 1f, 1f,
 						setOf(Direction.NORTH, Direction.SOUTH, Direction.UP, Direction.DOWN)
 					),
-				PartPose.ZERO
+				PartPose.rotation(0f, Math.toRadians(90f), 0f)
 			)
 			return LayerDefinition.create(mesh, 34, 2)
 		}

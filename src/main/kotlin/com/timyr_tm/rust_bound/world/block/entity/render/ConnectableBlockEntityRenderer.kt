@@ -1,8 +1,6 @@
 package com.timyr_tm.rust_bound.world.block.entity.render
 
 import com.mojang.blaze3d.vertex.PoseStack
-import com.mojang.logging.LogUtils
-import com.mojang.math.Axis
 import com.timyr_tm.rust_bound.RustBound
 import com.timyr_tm.rust_bound.client.model.geom.ModelLayers
 import com.timyr_tm.rust_bound.client.model.`object`.WireSegmentModel
@@ -21,16 +19,11 @@ import net.minecraft.client.resources.model.MaterialSet
 import net.minecraft.resources.Identifier
 import net.minecraft.world.phys.Vec3
 import org.joml.Matrix4f
-import org.joml.Quaternionf
 import org.joml.Vector3f
-import org.slf4j.Logger
 import kotlin.math.roundToInt
 import kotlin.math.sin
 
 class ConnectableBlockEntityRenderer(modelSet: EntityModelSet, val materials: MaterialSet): BlockEntityRenderer<ConnectableBlockEntity, ConnectableBlockEntityRenderState> {
-	val logger: Logger = LogUtils.getLogger()
-
-	private val texture: Material = Sheets.WIRE_SEGMENT_MAPPER.apply(Identifier.fromNamespaceAndPath(RustBound.MOD_ID, "wire_segment"))
 	private val model: WireSegmentModel = WireSegmentModel(modelSet.bakeLayer(ModelLayers.WIRE_SEGMENT), RenderTypes::entitySolid)
 
 	override fun createRenderState() = ConnectableBlockEntityRenderState()
@@ -69,21 +62,23 @@ class ConnectableBlockEntityRenderer(modelSet: EntityModelSet, val materials: Ma
 		state: ConnectableBlockEntityRenderState, poseStack: PoseStack,
 		collector: SubmitNodeCollector, cameraState: CameraRenderState
 	) {
-		val atlas: TextureAtlasSprite = materials.get(texture)
 		for (point in state.points) {
 			val length: Float = point.start.distance(point.end)
+			val atlas: TextureAtlasSprite = materials.get(
+				Sheets.WIRE_SEGMENT_MAPPER.apply(point.texture)
+			)
 
 			for (i in 0..<length.roundToInt()) {
 				val firstPos: Vector3f = mathPos(point.start, point.end, i.toFloat() / length.roundToInt(), length)
 				val lastPos: Vector3f = mathPos(point.start, point.end, (i + 1).toFloat() / length.roundToInt(), length)
-				val scale: Float = firstPos.distance(lastPos)
+
+                val matrix = Matrix4f()
+					.translate(firstPos)
+					.scale(firstPos.distance(lastPos))
+					.rotateTowards(firstPos.sub(lastPos).normalize(), Vector3f(0f, 1f, 0f))
+
 				poseStack.pushPose()
-				poseStack.translate(Vec3(firstPos))
-				poseStack.mulPose(
-					Quaternionf()
-						.rotateTo(Vector3f(1f, 0f, 0f), lastPos.sub(firstPos).normalize())
-				)
-				poseStack.scale(scale, scale, scale)
+				poseStack.mulPose(matrix)
 				collector.submitModel(
 					model,
 					Unit,
