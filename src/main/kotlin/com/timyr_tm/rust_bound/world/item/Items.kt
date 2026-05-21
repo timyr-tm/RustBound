@@ -9,9 +9,14 @@ import net.neoforged.neoforge.registries.DeferredRegister
 
 object Items {
     val ITEMS: DeferredRegister.Items = DeferredRegister.createItems(RustBound.MOD_ID);
-    val TEST_COIL: DeferredItem<SpoolItem> = ITEMS.registerItem("test_spool") {
+    val TEST_SPOOL: DeferredItem<SpoolItem> = ITEMS.registerItem("test_spool") {
         properties -> SpoolItem(WireTypes.TEST_WIRE_TYPE.getKey(), properties)
+    }
+    val WIRE_SPOOL: DeferredItem<SpoolItem> = ITEMS.registerItem("copper_spool") {
+        properties -> SpoolItem(WireTypes.COPPER_WIRE_TYPE.getKey(), properties)
     }
 
     val COPPER_INSULATOR: DeferredItem<BlockItem> = ITEMS.registerSimpleBlockItem(Blocks.COPPER_INSULATOR)
+
+    val WIRE_CUTTER: DeferredItem<WireCutterItem> = ITEMS.registerItem("wire_cutter", ::WireCutterItem)
 }

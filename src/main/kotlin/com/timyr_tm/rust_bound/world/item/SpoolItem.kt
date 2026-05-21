@@ -25,22 +25,24 @@ class SpoolItem(val wireType: ResourceKey<WireType>, properties: Properties): It
         if (blockEntity is ConnectableBlockEntity) {
             val pos: Vec3 = context.clickLocation.subtract(Vec3(blockEntity.blockPos))
             val point: Map.Entry<String, ConnectionPointInfo>? = blockEntity.connections.entries.firstOrNull {
-                info -> info.value.shape.toAabbs().any {
+                info -> info.value.area.toAabbs().any {
                     aabb -> aabb.inflate(0.001).contains(pos)
                 }
             }
             if (point == null)
                 return InteractionResult.FAIL
             if (context.itemInHand.has(DataComponents.SPOOL_POINTER)) {
-                val firstConnection: SpoolItemPointer = context.itemInHand.remove(DataComponents.SPOOL_POINTER)!!
+                val firstConnection: ConnectionPointerInfo = context.itemInHand.remove(DataComponents.SPOOL_POINTER)!!
 
                 val lastBlockEntity: ConnectableBlockEntity = firstConnection.getBlockEntity(context.level)
                     ?: return InteractionResult.FAIL
 
-                blockEntity.connections[point.key]!! += firstConnection.toConnectionPointer(this.wireType)
+                val lastConnection = ConnectionPointerInfo(point.key, point.value.pos)
+
+                blockEntity.connections[point.key]!![firstConnection] = wireType
                 blockEntity.setChanged()
 
-                lastBlockEntity.connections[firstConnection.name]!! += ConnectionPointerInfo(point.key, point.value.pos, wireType)
+                lastBlockEntity.connections[firstConnection.name]!![lastConnection] = wireType
                 lastBlockEntity.setChanged()
 
                 if (context.level.isClientSide && context.player != null)
@@ -52,7 +54,7 @@ class SpoolItem(val wireType: ResourceKey<WireType>, properties: Properties): It
                     )
             }
             else {
-                context.itemInHand.set(DataComponents.SPOOL_POINTER, SpoolItemPointer(point.key, point.value.pos))
+                context.itemInHand.set(DataComponents.SPOOL_POINTER, ConnectionPointerInfo(point.key, point.value.pos))
                 if (context.level.isClientSide && context.player != null)
                     context.player!!.displayClientMessage(Component.literal("+ ${point.key}"), true)
             }
@@ -63,7 +65,7 @@ class SpoolItem(val wireType: ResourceKey<WireType>, properties: Properties): It
 
     @Suppress("OVERRIDE_DEPRECATION")
     override fun appendHoverText(stack: ItemStack, context: TooltipContext, display: TooltipDisplay, adder: Consumer<Component>, flag: TooltipFlag) {
-        val pointer: SpoolItemPointer = stack.get(DataComponents.SPOOL_POINTER) ?: return
+        val pointer: ConnectionPointerInfo = stack.get(DataComponents.SPOOL_POINTER) ?: return
         val color: Int = if (context.level() != null && pointer.getBlockEntity(context.level()!!)?.connections?.containsKey(pointer.name) ?: false) CommonColors.GRAY else CommonColors.RED
         adder.accept(
             Component.translatable("spool.pointer", pointer.name, pointer.pos.toShortString())

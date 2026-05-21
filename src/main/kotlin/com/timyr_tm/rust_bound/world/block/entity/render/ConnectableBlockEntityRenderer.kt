@@ -1,7 +1,6 @@
 package com.timyr_tm.rust_bound.world.block.entity.render
 
 import com.mojang.blaze3d.vertex.PoseStack
-import com.timyr_tm.rust_bound.RustBound
 import com.timyr_tm.rust_bound.client.model.geom.ModelLayers
 import com.timyr_tm.rust_bound.client.model.`object`.WireSegmentModel
 import com.timyr_tm.rust_bound.client.renderer.Sheets
@@ -14,9 +13,7 @@ import net.minecraft.client.renderer.rendertype.RenderTypes
 import net.minecraft.client.renderer.state.CameraRenderState
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
-import net.minecraft.client.resources.model.Material
 import net.minecraft.client.resources.model.MaterialSet
-import net.minecraft.resources.Identifier
 import net.minecraft.world.phys.Vec3
 import org.joml.Matrix4f
 import org.joml.Vector3f
@@ -39,21 +36,21 @@ class ConnectableBlockEntityRenderer(modelSet: EntityModelSet, val materials: Ma
 		renderState.points = blockEntity.connections.values
 			.flatMap {
 				value -> value
-					.filter { con -> con.getConnectionPoint(blockEntity.level!!) != null }
-					.map(
-						fun (con): WireRenderInfo {
-							val a = con.getConnectionPoint(blockEntity.level!!)!!
-							return WireRenderInfo(
+					.filter { (pointer, _) -> pointer.getConnectionPoint(blockEntity.level!!) != null }
+					.map {
+						(pointer, wireType) -> run {
+							val a = pointer.getConnectionPoint(blockEntity.level!!)!!
+							return@run WireRenderInfo(
 								value.point.toVector3f(),
 								Vec3(a.pos)
 									.subtract(Vec3(value.pos))
 									.add(a.point)
 									.lerp(value.point, 0.5)
 									.toVector3f(),
-								con.wireType.identifier()
+								wireType.identifier()
 							)
 						}
-					)
+					}
 			}
 			.toSet()
 	}

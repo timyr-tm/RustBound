@@ -1,40 +1,38 @@
 package com.timyr_tm.rust_bound.world.electricity
 
-import com.timyr_tm.rust_bound.world.block.entity.ConnectableBlockEntity
 import net.minecraft.core.BlockPos
-import net.minecraft.world.level.LevelReader
-import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.resources.ResourceKey
 import net.minecraft.world.phys.Vec3
 import net.minecraft.world.phys.shapes.VoxelShape
 
-class ConnectionPointInfo(val point: Vec3, val shape: VoxelShape, val pos: BlockPos): Iterable<ConnectionPointerInfo> {
-    private val connections: MutableSet<ConnectionPointerInfo> = HashSet()
+class ConnectionPointInfo: Iterable<Map.Entry<ConnectionPointerInfo, ResourceKey<WireType>>> {
+    private val connections: MutableMap<ConnectionPointerInfo, ResourceKey<WireType>>
 
-    fun getBlockEntity(level: LevelReader): ConnectableBlockEntity? = level.getBlockEntity(pos) as? ConnectableBlockEntity
+    lateinit var pos: BlockPos
+    val point: Vec3
+    val area: VoxelShape
 
-    fun getBlockState(level: LevelReader): BlockState = level.getBlockState(pos)
-
-    override fun iterator(): Iterator<ConnectionPointerInfo> = this.connections.iterator()
-
-    operator fun plusAssign(connections: Iterable<ConnectionPointerInfo>) {
-        if (connections.any {connection -> connection.pos == this.pos})
-            throw RuntimeException()
-        this.connections.addAll(connections)
+    private constructor(point: Vec3, area: VoxelShape, connections: Map<ConnectionPointerInfo, ResourceKey<WireType>>) {
+        this.point = point
+        this.area = area
+        this.connections = connections.toMutableMap()
     }
 
-    operator fun plusAssign(connection: ConnectionPointerInfo) {
-        if (connection.pos == this.pos)
-            throw RuntimeException()
-        this.connections.add(connection)
+    constructor(point: Vec3, area: VoxelShape): this(point, area, emptyMap())
+
+    constructor(point: ConnectionPointInfo): this(point.point, point.area, point.connections)
+
+    fun clear() = connections.clear()
+
+    override fun iterator(): Iterator<Map.Entry<ConnectionPointerInfo, ResourceKey<WireType>>> = this.connections.entries.iterator()
+
+    operator fun set(pointer: ConnectionPointerInfo, wireType: ResourceKey<WireType>): ResourceKey<WireType>? = connections.put(pointer, wireType)
+
+    operator fun get(pointer: ConnectionPointerInfo): ResourceKey<WireType>? = connections[pointer]
+
+    operator fun minusAssign(pointer: ConnectionPointerInfo) {
+        connections -= pointer
     }
 
-    operator fun minusAssign(connections: Set<ConnectionPointerInfo>) {
-        this.connections.removeAll(connections)
-    }
-
-    operator fun minusAssign(connection: ConnectionPointerInfo) {
-        this.connections.remove(connection)
-    }
-
-    operator fun contains(connection: ConnectionPointerInfo) = connection in this.connections
+    operator fun contains(pointer: ConnectionPointerInfo) = pointer in this.connections
 }
