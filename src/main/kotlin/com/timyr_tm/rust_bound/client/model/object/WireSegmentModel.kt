@@ -12,7 +12,7 @@ import net.minecraft.resources.Identifier
 import org.joml.Math
 import java.util.function.Function
 
-class WireSegmentModel(root: ModelPart, renderType: Function<Identifier, RenderType>) : Model<Unit>(root, renderType) {
+class WireSegmentModel(root: ModelPart, render: Function<Identifier, RenderType>) : Model<Unit>(root, render) {
 	companion object {
 		fun createBodyLayer(): LayerDefinition {
 			val mesh = MeshDefinition()

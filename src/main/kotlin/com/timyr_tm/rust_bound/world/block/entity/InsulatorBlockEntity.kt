@@ -9,23 +9,18 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.Vec3
 import java.util.function.BiConsumer
 
+import net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING
+
 class InsulatorBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: BlockState): ConnectableBlockEntity(type, pos, state) {
 	constructor(pos: BlockPos, state: BlockState): this(BlockEntityTypes.INSULATOR_BLOCK_ENTITY_TYPE.get(), pos, state)
 
 	override fun registerConnections(connections: BiConsumer<String, ConnectionPointInfo>) {
-		val facing: Direction = blockState.getValue(InsulatorBlock.FACING)
+		val facing: Direction = blockState.getValue(FACING)
 		connections.accept(
 			"main",
 			ConnectionPointInfo(
 				Vec3(0.5, 0.5, 0.5).relative(facing, 0.25),
-				when (facing) {
-					Direction.DOWN -> InsulatorBlock.DOWN_CONNECTION_SHAPE
-					Direction.UP -> InsulatorBlock.UP_CONNECTION_SHAPE
-					Direction.NORTH -> InsulatorBlock.NORTH_CONNECTION_SHAPE
-					Direction.SOUTH -> InsulatorBlock.SOUTH_CONNECTION_SHAPE
-					Direction.WEST -> InsulatorBlock.WEST_CONNECTION_SHAPE
-					Direction.EAST -> InsulatorBlock.EAST_CONNECTION_SHAPE
-				}
+				InsulatorBlock.CONNECTIONS_SHAPES[facing]!!
 			)
 		)
 	}

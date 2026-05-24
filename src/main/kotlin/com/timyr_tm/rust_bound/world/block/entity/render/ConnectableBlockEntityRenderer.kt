@@ -1,7 +1,7 @@
 package com.timyr_tm.rust_bound.world.block.entity.render
 
 import com.mojang.blaze3d.vertex.PoseStack
-import com.timyr_tm.rust_bound.client.model.geom.ModelLayers
+import com.timyr_tm.rust_bound.client.model.geom.ModelLayerDefinitions
 import com.timyr_tm.rust_bound.client.model.`object`.WireSegmentModel
 import com.timyr_tm.rust_bound.client.renderer.Sheets
 import com.timyr_tm.rust_bound.world.block.entity.ConnectableBlockEntity
@@ -20,8 +20,8 @@ import org.joml.Vector3f
 import kotlin.math.roundToInt
 import kotlin.math.sin
 
-class ConnectableBlockEntityRenderer(modelSet: EntityModelSet, val materials: MaterialSet): BlockEntityRenderer<ConnectableBlockEntity, ConnectableBlockEntityRenderState> {
-	private val model: WireSegmentModel = WireSegmentModel(modelSet.bakeLayer(ModelLayers.WIRE_SEGMENT), RenderTypes::entitySolid)
+class ConnectableBlockEntityRenderer(modelSet: EntityModelSet, private val materials: MaterialSet): BlockEntityRenderer<ConnectableBlockEntity, ConnectableBlockEntityRenderState> {
+	private val model: WireSegmentModel = WireSegmentModel(modelSet.bakeLayer(ModelLayerDefinitions.WIRE_SEGMENT), RenderTypes::entitySolid)
 
 	override fun createRenderState() = ConnectableBlockEntityRenderState()
 

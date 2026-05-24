@@ -28,5 +28,6 @@ object CreativeModeTabs {
         output.accept(Items.WIRE_SPOOL)
         output.accept(Items.TEST_SPOOL)
         output.accept(Items.COPPER_INSULATOR)
+        output.accept(Items.WIRE_CUTTER)
     }
 }
