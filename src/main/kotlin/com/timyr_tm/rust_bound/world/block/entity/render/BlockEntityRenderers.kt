@@ -1,8 +1,10 @@
-@file:EventBusSubscriber
+@file:EventBusSubscriber(Dist.CLIENT, modid = RustBound.MOD_ID)
 
 package com.timyr_tm.rust_bound.world.block.entity.render
 
+import com.timyr_tm.rust_bound.RustBound
 import com.timyr_tm.rust_bound.world.block.entity.BlockEntityTypes
+import net.neoforged.api.distmarker.Dist
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.neoforge.client.event.EntityRenderersEvent
