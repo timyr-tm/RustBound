@@ -4,13 +4,23 @@ plugins {
     id("maven-publish")
     id("net.neoforged.moddev") version "2.0.141"
     id("idea")
-    kotlin("jvm") version "2.3.21"
+    kotlin("jvm") version "2.4.0"
 }
 
-version = properties["mod.version"].toString()
-group = properties["mod.group"].toString()
-base.archivesName = properties["mod.id"].toString()
-java.toolchain.languageVersion = JavaLanguageVersion.of(properties["java.version"].toString().toInt())
+val modVersion: String by properties
+val modGroup: String by properties
+val modId: String by properties
+
+val modMappingsVersion: String by properties
+
+val modDependenciesNeoForgeVersion: String by properties
+val modDependenciesMinecraftVersion: String by properties
+val modDependenciesK4fVersion: String by properties
+
+version = modVersion
+group = modGroup
+base.archivesName = modId
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 tasks.wrapper.configure {
     distributionType = Wrapper.DistributionType.BIN
@@ -22,7 +32,7 @@ sourceSets.main.get().resources {
     exclude("src/generated/**/.cache")
 }
 
-configurations{
+configurations {
     val localRuntime by creating
     runtimeClasspath {
         extendsFrom(localRuntime)
@@ -31,36 +41,36 @@ configurations{
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
-    implementation("thedarkcolour:kotlinforforge-neoforge:${properties["kotlin_for_forge.version"].toString()}")
+    implementation("thedarkcolour:kotlinforforge-neoforge:${modDependenciesK4fVersion}")
 }
 
 repositories {
     maven {
         name = "Kotlin for Forge"
-        setUrl("https://thedarkcolour.github.io/KotlinForForge/")
+        url = uri("https://thedarkcolour.github.io/KotlinForForge/")
     }
 }
 
 neoForge {
-    version = properties["neoforge.version"].toString()
+    version = modDependenciesNeoForgeVersion
 
-    mods.register(properties["mod.id"].toString()).get().sourceSet(sourceSets.main.get())
+    mods.register(modId).get().sourceSet(sourceSets.main.get())
 
     parchment {
-        mappingsVersion = properties["parchment.version"].toString()
-        minecraftVersion = properties["minecraft.version"].toString()
+        mappingsVersion = modMappingsVersion
+        minecraftVersion = modDependenciesMinecraftVersion
     }
 
     runs {
         register("client") {
             client()
-            systemProperty("neoforge.enabledGameTestNamespaces", properties["mod.id"].toString())
+            systemProperty("neoforge.enabledGameTestNamespaces", modId)
         }
 
         register("server") {
             server()
             programArgument("--nogui")
-            systemProperty("neoforge.enabledGameTestNamespaces", properties["mod.id"]!!.toString())
+            systemProperty("neoforge.enabledGameTestNamespaces", modId)
         }
 
         register("clientData") {
@@ -68,7 +78,7 @@ neoForge {
 
             programArguments.addAll(
                 "--all",
-                "--mod", properties["mod.id"]!!.toString(),
+                "--mod", modId,
                 "--output", file("src/generated/resources/").absolutePath,
                 "--existing", file("src/main/resources/").absolutePath
             )
@@ -82,19 +92,15 @@ neoForge {
 
 }
 
-var generateModMetadata = tasks.register<ProcessResources>("generateModMetadata") {
-    var replaceProperties = listOf(
-        "mod.version", "mod.group", "mod.id", "mod.name",
-        "mod.license", "mod.issue_tracker", "mod.update_url",
-        "mod.display_url", "mod.logo", "mod.credits",
-        "mod.authors", "mod.description", "neoforge.version",
-        "parchment.version", "minecraft.version",
-        "minecraft.version_range", "java.version",
-        "kotlin_for_forge.version", "kotlin_for_forge.version_range"
-    ).associateWith { properties.getOrDefault(it, "") }
+val metadataProperties: Map<String, String> = properties
+    .filterKeys { key -> key.startsWith("mod") }
+    .mapValues { (_, value) -> value.toString() }
 
-    inputs.properties(replaceProperties)
-    expand(replaceProperties)
+val generateModMetadata = tasks.register<ProcessResources>("generateModMetadata") {
+    description = "generateModMetadata"
+
+    inputs.properties(metadataProperties)
+    expand(metadataProperties)
     from("src/main/templates")
     into("build/generated/sources/modMetadata")
 }
