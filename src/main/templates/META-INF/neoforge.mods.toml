@@ -1,36 +1,36 @@
 modLoader = "kotlinforforge"
-loaderVersion = "${this.'kotlin_for_forge.version_range'}"
-license = "${this.'mod.license'}"
-issueTrackerURL = "${this.'mod.issue_tracker'}"
+loaderVersion = "${modDependenciesK4fVersionRange}"
+license = "${modLicense}"
+issueTrackerURL = "${modIssueTracker}"
 
 [[mods]]
-modId = "${this.'mod.id'}"
-version = "${this.'mod.version'}"
-displayName = "${this.'mod.name'}"
-updateJSONURL = "${this.'mod.update_url'}"
-displayURL = "${this.'mod.display_url'}"
-logoFile = "${this.'mod.logo'}"
-credits = "${this.'mod.credits'}"
-authors = "${this.'mod.authors'}"
-description = "${this.'mod.description'}"
+modId = "${modId}"
+version = "${modVersion}"
+displayName = "${modName}"
+updateJSONURL = "${modUpdateUrl}"
+displayURL = "${modDisplayUrl}"
+logoFile = "${modLogo}"
+credits = "${modCredits}"
+authors = "${modAuthors}"
+description = "${modDescription}"
 
-[[dependencies.${this.'mod.id'}]]
+[[dependencies.${modId}]]
 modId = "neoforge"
 type = "required"
-versionRange = "${this.'neoforge.version'}"
+versionRange = "${modDependenciesNeoForgeVersionRange}"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.${this.'mod.id'}]]
+[[dependencies.${modId}]]
 modId = "minecraft"
 type = "required"
-versionRange = "${this.'minecraft.version_range'}"
+versionRange = "${modDependenciesMinecraftVersionRange}"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.${this.'mod.id'}]]
+[[dependencies.${modId}]]
 modId = "kotlinforforge"
 type = "required"
-versionRange = "${this.'kotlin_for_forge.version_range'}"
+versionRange = "${modDependenciesK4fVersionRange}"
 ordering = "NONE"
 side = "BOTH"
