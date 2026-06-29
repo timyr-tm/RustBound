@@ -1,5 +1,5 @@
 modLoader = "kotlinforforge"
-loaderVersion = "${modDependenciesK4fVersionRange}"
+loaderVersion = "${k4fVersionRange}"
 license = "${modLicense}"
 issueTrackerURL = "${modIssueTracker}"
 
@@ -17,20 +17,20 @@ description = "${modDescription}"
 [[dependencies.${modId}]]
 modId = "neoforge"
 type = "required"
-versionRange = "${modDependenciesNeoForgeVersionRange}"
+versionRange = "${neoForgeVersionRange}"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${modId}]]
 modId = "minecraft"
 type = "required"
-versionRange = "${modDependenciesMinecraftVersionRange}"
+versionRange = "${minecraftVersionRange}"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${modId}]]
 modId = "kotlinforforge"
 type = "required"
-versionRange = "${modDependenciesK4fVersionRange}"
+versionRange = "${k4fVersionRange}"
 ordering = "NONE"
 side = "BOTH"

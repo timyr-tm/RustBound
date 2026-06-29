@@ -1,4 +1,4 @@
-package com.timyr_tm.rust_bound.world.item;
+package com.timyr_tm.rust_bound.world.item
 
 import com.timyr_tm.rust_bound.RustBound
 import net.minecraft.core.registries.Registries
@@ -11,23 +11,20 @@ import net.neoforged.neoforge.registries.DeferredHolder
 import net.neoforged.neoforge.registries.DeferredRegister
 
 object CreativeModeTabs {
-    val CREATIVE_MODE_TABS: DeferredRegister<CreativeModeTab> = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, RustBound.MOD_ID);
+    val CREATIVE_MODE_TABS: DeferredRegister<CreativeModeTab> = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, RustBound.MOD_ID)
 
-    val RUST_BOUND: DeferredHolder<CreativeModeTab, CreativeModeTab> = CREATIVE_MODE_TABS.register(
-        "main",
-        fun () = CreativeModeTab.builder()
-            .title(Component.literal(getModNamespace()))
-            .icon(fun () = ItemStack(LIGHT))
-            .displayItems(::getMainTabItems)
+    val RUST_BOUND: DeferredHolder<CreativeModeTab, CreativeModeTab> = CREATIVE_MODE_TABS.register("main") {
+        -> CreativeModeTab.builder()
+            .title(Component.literal(ModList.get().getModContainerById(RustBound.MOD_ID).orElseThrow().namespace))
+            .icon { ItemStack(LIGHT) }
+            .displayItems {
+                _, output -> run {
+                    output.accept(Items.WIRE_SPOOL)
+                    output.accept(Items.TEST_SPOOL)
+                    output.accept(Items.COPPER_INSULATOR)
+                    output.accept(Items.WIRE_CUTTER)
+                }
+            }
             .build()
-    )
-
-    private fun getModNamespace(): String = ModList.get().getModContainerById(RustBound.MOD_ID).orElseThrow().getNamespace()
-
-    private fun getMainTabItems(parameters: CreativeModeTab.ItemDisplayParameters, output: CreativeModeTab.Output) {
-        output.accept(Items.WIRE_SPOOL)
-        output.accept(Items.TEST_SPOOL)
-        output.accept(Items.COPPER_INSULATOR)
-        output.accept(Items.WIRE_CUTTER)
     }
 }

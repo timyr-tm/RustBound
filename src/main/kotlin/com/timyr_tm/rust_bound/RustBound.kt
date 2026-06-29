@@ -8,7 +8,7 @@ import com.timyr_tm.rust_bound.world.item.CreativeModeTabs.CREATIVE_MODE_TABS
 import com.timyr_tm.rust_bound.world.block.Blocks.BLOCKS
 import com.timyr_tm.rust_bound.world.block.entity.BlockEntityTypes.BLOCK_ENTITY_TYPES
 import com.timyr_tm.rust_bound.core.component.DataComponents.DATA_COMPONENTS
-import com.timyr_tm.rust_bound.world.electricity.WireTypes.WIRE_TYPES
+import com.timyr_tm.rust_bound.world.WireTypes.WIRE_TYPES
 
 @Mod(RustBound.MOD_ID)
 class RustBound {
@@ -17,11 +17,11 @@ class RustBound {
     }
 
     constructor(bus: IEventBus) {
-        ITEMS.register(bus);
-        CREATIVE_MODE_TABS.register(bus);
-        BLOCKS.register(bus);
-        BLOCK_ENTITY_TYPES.register(bus);
-        DATA_COMPONENTS.register(bus);
-        WIRE_TYPES.register(bus);
+        ITEMS.register(bus)
+        CREATIVE_MODE_TABS.register(bus)
+        BLOCKS.register(bus)
+        BLOCK_ENTITY_TYPES.register(bus)
+        DATA_COMPONENTS.register(bus)
+        WIRE_TYPES.register(bus)
     }
 }

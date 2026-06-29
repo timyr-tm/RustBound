@@ -1,18 +1,18 @@
-package com.timyr_tm.rust_bound.core.component;
+package com.timyr_tm.rust_bound.core.component
 
 import com.timyr_tm.rust_bound.RustBound
-import com.timyr_tm.rust_bound.world.electricity.ConnectionPointerInfo
+import com.timyr_tm.rust_bound.world.block.entity.connectable.PointerInfo
 import net.minecraft.core.component.DataComponentType
 import net.minecraft.core.registries.Registries
 import net.neoforged.neoforge.registries.DeferredRegister
 import java.util.function.Supplier
 
 object DataComponents {
-    val DATA_COMPONENTS: DeferredRegister.DataComponents = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, RustBound.MOD_ID);
+    val DATA_COMPONENTS: DeferredRegister.DataComponents = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, RustBound.MOD_ID)
 
-    val SPOOL_POINTER: Supplier<DataComponentType<ConnectionPointerInfo>> = DATA_COMPONENTS.registerComponentType("spool/pointer") {
+    val SPOOL_POINTER: Supplier<DataComponentType<PointerInfo>> = DATA_COMPONENTS.registerComponentType("spool/pointer") {
         builder -> builder
-            .persistent(ConnectionPointerInfo.CODEC)
-            .networkSynchronized(ConnectionPointerInfo.STREAM_CODEC)
+            .persistent(PointerInfo.CODEC)
+            .networkSynchronized(PointerInfo.STREAM_CODEC)
     }
 }

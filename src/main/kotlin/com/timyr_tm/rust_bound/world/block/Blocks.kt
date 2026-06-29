@@ -1,4 +1,4 @@
-package com.timyr_tm.rust_bound.world.block;
+package com.timyr_tm.rust_bound.world.block
 
 import com.timyr_tm.rust_bound.RustBound
 import net.neoforged.neoforge.registries.DeferredBlock

@@ -1,4 +1,4 @@
-package com.timyr_tm.rust_bound.world.block.entity;
+package com.timyr_tm.rust_bound.world.block.entity
 
 import com.timyr_tm.rust_bound.RustBound
 import com.timyr_tm.rust_bound.world.block.Blocks

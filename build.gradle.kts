@@ -7,20 +7,12 @@ plugins {
     kotlin("jvm") version "2.4.0"
 }
 
-val modVersion: String by properties
-val modGroup: String by properties
-val modId: String by properties
+val modId = findProperty("modId") as String
 
-val modMappingsVersion: String by properties
-
-val modDependenciesNeoForgeVersion: String by properties
-val modDependenciesMinecraftVersion: String by properties
-val modDependenciesK4fVersion: String by properties
-
-version = modVersion
-group = modGroup
+version = findProperty("modVersion") as String
+group = findProperty("modGroup") as String
 base.archivesName = modId
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
 tasks.wrapper.configure {
     distributionType = Wrapper.DistributionType.BIN
@@ -33,7 +25,7 @@ sourceSets.main.get().resources {
 }
 
 configurations {
-    val localRuntime by creating
+    val localRuntime = create("localRuntime")
     runtimeClasspath {
         extendsFrom(localRuntime)
     }
@@ -41,7 +33,7 @@ configurations {
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
-    implementation("thedarkcolour:kotlinforforge-neoforge:${modDependenciesK4fVersion}")
+    implementation("thedarkcolour:kotlinforforge-neoforge:${findProperty("k4fVersion") as String}")
 }
 
 repositories {
@@ -52,14 +44,9 @@ repositories {
 }
 
 neoForge {
-    version = modDependenciesNeoForgeVersion
+    version = findProperty("neoForgeVersion") as String
 
     mods.register(modId).get().sourceSet(sourceSets.main.get())
-
-    parchment {
-        mappingsVersion = modMappingsVersion
-        minecraftVersion = modDependenciesMinecraftVersion
-    }
 
     runs {
         register("client") {
@@ -92,9 +79,15 @@ neoForge {
 
 }
 
-val metadataProperties: Map<String, String> = properties
-    .filterKeys { key -> key.startsWith("mod") }
-    .mapValues { (_, value) -> value.toString() }
+val metadataProperties: Map<String, Any?> = setOf(
+    "modVersion", "modGroup", "modId", "modName",
+    "modLicense", "modIssueTracker", "modUpdateUrl",
+    "modDisplayUrl", "modLogo", "modCredits", "modAuthors",
+    "modDescription", "k4fVersion", "k4fVersionRange",
+    "neoForgeVersion", "neoForgeVersionRange", "minecraftVersion",
+    "minecraftVersionRange",
+)
+    .associateWith(::findProperty)
 
 val generateModMetadata = tasks.register<ProcessResources>("generateModMetadata") {
     description = "generateModMetadata"
